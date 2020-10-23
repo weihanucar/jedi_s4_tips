@@ -1,0 +1,25 @@
+Notes for running hofx on s4
+Wei Han, weihan@ucar.edu
+10/22/2020
+
+step1: Git clone
+git clone https://github.com/JCSDA-internal/fv3-bundle.git
+
+step2: modify CMakeLists.txt
+change the crtm option to :
+ecbuild_bundle( PROJECT crtm GIT "https://github.com/jcsda-internal/crtm.git" BRANCH release/crtm_jedi UPDATE )
+
+step3: Load a set of modules on S4:
+source /data/users/whan/jexp/jedi_release/20201001_0300Z/jedi-module-load.sh
+
+step4:build  
+mkdir build
+cd build
+ecbuild -DMPIRXEC=$MPIEXEC ..
+make -j4
+
+step5: run hofx test 
+cd /data/users/whan/jexp/jedi_release/20201001_0300Z
+vi ./config/hofx3d.jedi.yaml (set the crtm coefficient directory correctly)
+sbatch submit_2020100100.sh  
+(using 12 cpus to meet geometry_gfs_c48.nml layout = 1,2 )
